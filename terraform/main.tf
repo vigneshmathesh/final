@@ -3,12 +3,12 @@ provider "aws" {
 }
 
 resource "aws_key_pair" "pro-1" {
-  key_name   = "pro-1"
+  key_name   = "pro-1-renamed"
   public_key = file("${path.module}/id_rsa.pub")
 }
 
-resource "aws_security_group" "my-sg-1" {
-  name = "my-sg-1"
+resource "aws_security_group" "my-sg-2" {
+  name = "my-sg-2-renamed"
 
   ingress {
     from_port   = 5000
@@ -36,7 +36,8 @@ resource "aws_instance" "flask_app" {
   ami                    = "ami-020cba7c55df1f615"    # Ubuntu 22.04 (verify this is correct)
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.pro-1.key_name
-  vpc_security_group_ids = [aws_security_group.my-sg-1.id]
+  vpc_security_group_ids = [aws_security_group.my-sg-2.id]
+    subnet_id            = "subnet-054107beef0c6a4d9"
   associate_public_ip_address = true   # ✅ Important for access via browser/SSH
 
   user_data = <<-EOF
@@ -48,7 +49,7 @@ resource "aws_instance" "flask_app" {
               EOF
 
   tags = {
-    Name = "project-num"
+    Name = "my-instance-1"
   }
 }
 
